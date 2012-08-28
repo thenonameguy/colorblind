@@ -1,0 +1,65 @@
+#!/usr/bin/python
+import sys
+import re
+import math
+
+def colortoint(s):
+    match=re.search("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",s)
+    if len(match.group())<1:
+        print "The given argument is not a color: %s" % "s"
+        sys.exit(1)
+    s=s[1:]
+    if len(s)==3:
+        copy=s
+        s=[]
+        for i in range(6):
+            s.append(0)
+        s[0]=copy[0]
+        s[1]=copy[0]
+        s[2]=copy[1]
+        s[3]=copy[1]
+        s[4]=copy[2]
+        s[5]=copy[2]
+        s=arraytostring(s)
+    return int(s,16)
+
+
+def arraytostring(numlist):
+    return ''.join(map(str, numlist))
+
+if __name__=="__main__":
+    if len(sys.argv)<4:
+        print "Give me some parameters!"
+        print 'Use: colorblind.py "[firstcolor]" "[secondcolor]" "[inspectablecolor]"'
+        print 'Example: colorblind.py "#ffffff" "#333" "#1313ac"'
+        sys.exit()
+    colors=["lol","why","do","lol"]
+    for i in range(1,4):
+        colors[i]=colortoint(sys.argv[i])
+        
+    diff=colors[1]-colors[2]
+    greater=0
+    if diff<0:
+        greater=2
+    elif diff==0:
+        print "The two first arguments match, no need to continue"
+        sys.exit(1)
+    else:
+        greater=1
+
+    smaller=[1,2]
+    smaller.remove(greater)
+    smaller=smaller[0]
+    median=colors[greater]-abs(diff)
+    matchable=colors[3]
+    if matchable>median:
+        print sys.argv[3]+" is closer to "+sys.argv[greater]
+    elif matchable==median:
+        print "The 3rd color is the perfect mix of the first two."
+    else:
+        print sys.argv[3]+" is closer to "+sys.argv[smaller]
+
+
+
+
+
